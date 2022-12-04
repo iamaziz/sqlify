@@ -1,0 +1,8 @@
+# core
+pandas
+streamlit
+
+# features
+streamlit-ace 	# code editor: https://github.com/okld/streamlit-ace
+pandasql  	# execute sql on pandas df
+
