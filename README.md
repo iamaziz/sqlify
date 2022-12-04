@@ -14,7 +14,8 @@ Query tabular data files (e.g. csv, xlsx .. etc) using SQL. To get started, drag
 ```
 - support upload other file types: tsv, .xls, .xlsx
 - caching / for scaling, use DuckDB
-- parse data types
+- parse data types, and change col types
+- configs eg skip_rows, sep, column names .. etc
 ```
 
 Credit. This is created with:
