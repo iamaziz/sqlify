@@ -3,12 +3,6 @@
 Query tabular data files (e.g. csv, xlsx .. etc) using SQL. To get started, drag and drop the file or read from a URL.
 
 
-### Example
-
-![](./assets/demo.gif)
-
-
-
 **TODO**
 ```
 - support upload other file types: tsv, .xls, .xlsx
