@@ -12,12 +12,13 @@ Query tabular data files (e.g. csv, xlsx .. etc) using SQL. To get started, drag
 
 **TODO**
 ```
-- support upload other file types: tsv, .xls, .xlsx
-- caching / for scaling, use DuckDB
-- parse data types, and change col types
-- configs eg skip_rows, sep, column names .. etc
+- [ ] generate data profile with pandas_profiling
+- [ ] support upload other file types: tsv, .xls, .xlsx
+- [ ] caching / for scaling, use DuckDB
+- [ ] parse data types, and change col types
+- [ ] configs eg skip_rows, sep, column names .. etc
 ```
 
 Credit. This is created with:
 
-> [Streamlit](https://github.com/streamlit/streamlit) | [pandas](https://github.com/pandas-dev/pandas) | [pandasql](https://github.com/yhat/pandasql) | [streamlit-ace](https://github.com/okld/streamlit-ace)
+> [Streamlit](https://github.com/streamlit/streamlit) | [pandas](https://github.com/pandas-dev/pandas) | [duckdb](https://github.com/duckdb/duckdb) | [streamlit-ace](https://github.com/okld/streamlit-ace)
