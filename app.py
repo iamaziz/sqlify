@@ -2,12 +2,13 @@ import pandas as pd
 import pandasql as ps
 import streamlit as st
 import streamlit_ace as stace
+import duckdb
 
 st.set_page_config(page_title="SQLify", page_icon="🔎", layout="wide")
 st.title("SQLify")
 
 
-@st.cache(allow_output_mutation=True)  # TODO: fix
+@st.cache_data #(allow_output_mutation=True)  # TODO: fix
 def _read_csv(f, **kwargs):
     df = pd.read_csv(f, on_bad_lines="skip", **kwargs)
     # clean
@@ -94,17 +95,18 @@ def code_editor():
     return content
 
 
-def query_data(sql):
+@st.cache_data
+def query_data(sql, df):
     try:
-        return ps.sqldf(sql)
-    except:
+        return duckdb.query(sql).df()
+    except Exception as e:
         st.warning("Invalid Query!")
-        st.stop()
+        # st.stop()
 
 
 def download(df, save_as="results.csv"):
     # -- to download
-    @st.cache
+    @st.cache_data
     def convert_df(_df):
         return _df.to_csv().encode("utf-8")
 
@@ -145,5 +147,5 @@ if __name__ == "__main__":
     st.write("---")
     sql = code_editor()
     if sql:
-        res = query_data(sql)
+        res = query_data(sql, df)
         display_results(sql, res)

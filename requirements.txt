@@ -3,6 +3,6 @@ pandas
 streamlit
 
 # features
-streamlit-ace 	# code editor: https://github.com/okld/streamlit-ace
-pandasql  	# execute sql on pandas df
+streamlit-ace==0.1.1 	# code editor: https://github.com/okld/streamlit-ace
+duckdb==0.7.0  	        # execute sql on pandas df
 
