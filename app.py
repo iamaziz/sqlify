@@ -1,8 +1,9 @@
 import pandas as pd
-import pandasql as ps
 import streamlit as st
 import streamlit_ace as stace
 import duckdb
+from ydata_profiling import ProfileReport
+from streamlit_pandas_profiling import st_profile_report
 
 st.set_page_config(page_title="SQLify", page_icon="🔎", layout="wide")
 st.title("SQLify")
@@ -135,6 +136,11 @@ def display_results(query, result: pd.DataFrame):
     download(result)
 
 
+@st.cache_resource
+def data_profiler(df):
+    return ProfileReport(df, title="Profiling Report")
+
+
 def docs():
     content = """
     
@@ -156,3 +162,8 @@ if __name__ == "__main__":
     if sql:
         res = query_data(sql, df)
         display_results(sql, res)
+
+    if st.checkbox("DATA PROFILE"):
+        profile = data_profiler(df)
+
+        st_profile_report(profile)

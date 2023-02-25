@@ -12,7 +12,7 @@ Query tabular data files (e.g. csv, xlsx .. etc) using SQL. To get started, drag
 
 **TODO**
 ```
-- [ ] generate data profile with pandas_profiling
+- [x] generate data profile with pandas_profiling
 - [ ] support upload other file types: tsv, .xls, .xlsx
 - [ ] caching / for scaling, use DuckDB
 - [ ] parse data types, and change col types
