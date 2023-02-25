@@ -8,7 +8,7 @@ st.set_page_config(page_title="SQLify", page_icon="🔎", layout="wide")
 st.title("SQLify")
 
 
-@st.cache_data #(allow_output_mutation=True)  # TODO: fix
+@st.cache_data
 def _read_csv(f, **kwargs):
     df = pd.read_csv(f, on_bad_lines="skip", **kwargs)
     # clean
@@ -16,36 +16,43 @@ def _read_csv(f, **kwargs):
     return df
 
 
+SAMPLE_DATA = {
+    "Churn dataset": "https://raw.githubusercontent.com/AtashfarazNavid/MachineLearing-ChurnModeling/main/Streamlit-WebApp-1/Churn.csv",
+    "Periodic Table": "https://gist.githubusercontent.com/GoodmanSciences/c2dd862cd38f21b0ad36b8f96b4bf1ee/raw/1d92663004489a5b6926e944c1b3d9ec5c40900e/Periodic%2520Table%2520of%2520Elements.csv",
+    "Movies": "https://raw.githubusercontent.com/reisanar/datasets/master/HollywoodMovies.csv",
+    "Iris Flower": "https://gist.githubusercontent.com/netj/8836201/raw/6f9306ad21398ea43cba4f7d537619d0e07d5ae3/iris.csv",
+}
+
+
 def read_data():
     txt = "Upload a data file (supported files: .csv, .tsv, .xls, .xlsx)"
-    col1, col2 = st.columns(2)
-    with col1:
-        placeholder = st.empty()
-        with placeholder:
+    placeholder = st.empty()
+    with placeholder:
+        col1, col2, col3 = st.columns([3, 2, 1])
+        with col1:
             file_ = st.file_uploader(txt)
-    with col2:
-        placeholder2 = st.empty()
-        with placeholder2:
+        with col2:
             url = st.text_input(
-                "Or read from a URL",
+                "Read from a URL",
                 placeholder="Enter URL (supported types: .csv and .tsv)",
             )
             if url:
-                placeholder2.empty()
-                placeholder.empty()
-                return _read_csv(url)
+                file_ = url
+        with col3:
+            selected = st.selectbox("", options=[""] + list(SAMPLE_DATA))
+            if selected:
+                file_ = SAMPLE_DATA[selected]
 
     if not file_:
         st.stop()
 
     placeholder.empty()
-    placeholder2.empty()
 
-    if str(file_.name).endswith(".csv"):
+    try:
         return _read_csv(file_)
-
-    st.warning("Unsupported file type!")
-    st.stop()
+    except Exception as e:
+        st.warning("Unsupported file type!")
+        st.stop()
 
 
 def display(df):
