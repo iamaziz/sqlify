@@ -40,7 +40,7 @@ def read_data():
             if url:
                 file_ = url
         with col3:
-            selected = st.selectbox("", options=[""] + list(SAMPLE_DATA))
+            selected = st.selectbox("Select a sample dataset", options=[""] + list(SAMPLE_DATA))
             if selected:
                 file_ = SAMPLE_DATA[selected]
 
