@@ -191,6 +191,7 @@ if __name__ == "__main__":
     number_cells = col1.slider("Number of SQL sessions to use", value=1, max_value=40)
     show_panel = col2.checkbox("Show editor panel", key="sql")
     for i in range(number_cells):
+        st.write(f"`IN[{i+1}]`")
         key = f"sql{i}"
         sql = code_editor("sql", hint, show_panel=show_panel, key=key)
         if sql:
@@ -211,6 +212,7 @@ if __name__ == "__main__":
     number_cells = col1.slider("Number of Python cells to use", value=3, max_value=40)
     show_panel = col2.checkbox("Show cell config panel")
     for i in range(number_cells):
+        st.write(f"`IN[{i+1}]`")
         user_script = code_editor("python", hint, show_panel=show_panel, key=i)
         if user_script:
             run_python_script(user_script)
