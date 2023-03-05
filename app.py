@@ -194,8 +194,6 @@ if __name__ == "__main__":
 
     user_script = code_editor("python", hint)
     if user_script:
-        # st.map(df.sample(10)[["lat", "lng"]])
-        df.rename(columns={"lng":"lon"}, inplace=True)
         run_python_script(user_script)
 
     st.write("---")
