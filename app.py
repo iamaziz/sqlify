@@ -142,9 +142,6 @@ def download(df, key, save_as="results.csv"):
 
 
 def display_results(query: str, result: pd.DataFrame, key: str):
-    # st.write("> QUERY")
-    # st.code(query, language="sql")
-    st.write("> RESULTS")
     st.dataframe(result, use_container_width=True)
     st.markdown(f"> `{result.shape}`")
     download(result, key=key)
@@ -152,9 +149,7 @@ def display_results(query: str, result: pd.DataFrame, key: str):
 
 def run_python_script(user_script, key):
     py = f"st.write({user_script})"
-    st.code(user_script)
     try:
-        st.write(f"> _RESULTS_")
         exec(py)
     except Exception as e:
         c1, c2 = st.columns(2)
