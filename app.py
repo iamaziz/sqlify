@@ -7,6 +7,7 @@ from streamlit_pandas_profiling import st_profile_report
 
 st.set_page_config(page_title="PySQLify", page_icon="🔎", layout="wide")
 st.title("PySQLify")
+st.write("_Data Analysis_ Tool")
 
 
 @st.cache_data
