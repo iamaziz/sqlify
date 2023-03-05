@@ -30,7 +30,7 @@ SAMPLE_DATA = {
 
 
 def read_data():
-    txt = "Upload a data file (supported files: .csv, .tsv, .xls, .xlsx)"
+    txt = "Upload a data file (supported files: .csv) TODO: .tsv, .xls, .xlsx"
     placeholder = st.empty()
     with placeholder:
         col1, col2, col3 = st.columns([3, 2, 1])
@@ -169,7 +169,7 @@ def data_profiler(df):
 def docs():
     content = """
     
-    #### Upload a dataset to process (manipulate/analyze) it using SQL and Python
+    #### Upload a dataset to process (manipulate/analyze) it using SQL and Python, similar to running Jupyter Notebooks.
     To get started, drag and drop the file, read from a URL, or select a sample dataset. To load a new dataset, refresh the webpage.
     > <sub>[_src code_ here](https://github.com/iamaziz/sqlify)</sub>
     """

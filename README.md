@@ -1,8 +1,8 @@
-# SQLify
+# PySQLify
 
 [![Open in Streamlit][share_badge]][share_link]
 
-Query tabular data files (e.g. csv, xlsx .. etc) using SQL. To get started, drag and drop the file or read from a URL.
+Upload a dataset to process (manipulate/analyze) it using SQL and Python, similar to running Jupyter Notebooks. Currently, supports `csv` files only.
 
 
 [share_badge]: https://static.streamlit.io/badges/streamlit_badge_black_white.svg
