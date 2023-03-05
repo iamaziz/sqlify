@@ -52,9 +52,9 @@ def read_data():
         st.stop()
 
     placeholder.empty()
-
+    kwargs = {"skiprows": st.number_input("skip header", value=0, max_value=10)}
     try:
-        return _read_csv(file_)
+        return _read_csv(file_, **kwargs)
     except Exception as e:
         st.warning("Unsupported file type!")
         st.stop()
@@ -188,7 +188,7 @@ if __name__ == "__main__":
         DESCRIBE TABLE df
     """
     col1, col2 = st.columns([2, 1])
-    number_cells = col1.slider("Number of SQL sessions to use", value=1, max_value=40)
+    number_cells = col1.number_input("Number of SQL cells to use", value=1, max_value=40)
     show_panel = col2.checkbox("Show editor panel", key="sql")
     for i in range(number_cells):
         st.write(f"`IN[{i+1}]`")
@@ -210,7 +210,7 @@ if __name__ == "__main__":
         st.map(df.sort_values(by='population', ascending=False)[:10])
     """
     col1, col2 = st.columns([2, 1])
-    number_cells = col1.slider("Number of Python cells to use", value=3, max_value=40)
+    number_cells = col1.number_input("Number of Python cells to use", value=3, max_value=40)
     show_panel = col2.checkbox("Show cell config panel")
     for i in range(number_cells):
         st.write(f"`IN[{i+1}]`")
