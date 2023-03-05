@@ -9,3 +9,4 @@ duckdb==0.7.0  	        # execute sql on pandas df
 pandas-profiling
 ydata-profiling
 streamlit-pandas-profiling
+plotly

@@ -4,6 +4,7 @@ import streamlit_ace as stace
 import duckdb
 import numpy as np # for user session
 import scipy # for user session
+import plotly.figure_factory as ff # for user session
 import matplotlib.pyplot as plt # for user session
 from ydata_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
@@ -104,7 +105,7 @@ def code_editor(language, hint, show_panel, key=None):
     with col1:
         content = stace.st_ace(
             language=language,
-            height=110,
+            height=170,
             show_gutter=False,
             # annotations="",
             placeholder=hint,
@@ -178,6 +179,18 @@ def docs():
     #### Upload a dataset to process (manipulate/analyze) it using SQL and Python, similar to running Jupyter Notebooks.
     To get started, drag and drop the file, read from a URL, or select a sample dataset. To load a new dataset, refresh the webpage.
     > <sub>[_src code_ here](https://github.com/iamaziz/sqlify)</sub>
+
+    Examples:
+    # _EXAMPLE 1_
+    ![image](https://user-images.githubusercontent.com/3298308/222946054-a92ea42c-ffe6-4958-900b-2b72056216f8.png)
+
+    # _EXAMPLE 2_
+    ![image](https://user-images.githubusercontent.com/3298308/222947315-f2c06063-dd18-4215-bbab-c1b2f3f00888.png)
+    ![image](https://user-images.githubusercontent.com/3298308/222947321-c7e38d9d-7274-4368-91c1-1548b0da14dc.png)
+
+    # _EXAMPLE 3_
+    ![image](https://user-images.githubusercontent.com/3298308/222948323-784b8ab4-35dc-412f-964d-6991a8c46047.png)
+    ![image](https://user-images.githubusercontent.com/3298308/222949287-2024a75f-04db-4861-93b5-c43d206e2dc6.png)
     """
 
     with st.expander("READE"):
@@ -198,7 +211,7 @@ if __name__ == "__main__":
     """
     col1, col2 = st.columns([2, 1])
     number_cells = col1.number_input("Number of SQL cells to use", value=1, max_value=40)
-    show_panel = col2.checkbox("Show editor panel", key="sql")
+    show_panel = col2.checkbox("Show cell config panel", key="sql")
     for i in range(number_cells):
         st.markdown("<br>", unsafe_allow_html=True)
         st.write(f"> `IN[{i+1}]`")
