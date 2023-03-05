@@ -5,8 +5,8 @@ import duckdb
 from ydata_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
 
-st.set_page_config(page_title="SQLify", page_icon="🔎", layout="wide")
-st.title("SQLify")
+st.set_page_config(page_title="PySQLify", page_icon="🔎", layout="wide")
+st.title("PySQLify")
 
 
 @st.cache_data
@@ -75,24 +75,28 @@ def display(df):
         st.sidebar.write(df_)
 
 
-def code_editor(language, hint):
+def code_editor(language, hint, show_panel, key=None):
     # Spawn a new Ace editor
     col1, col2 = st.columns([2, 1])
+    placeholder = col2.empty()
 
+    # with placeholder:
+    st.write("")
     with col2:
-        st.write("")
-        with st.expander("EDITOR PANEL"):
+        with placeholder.expander("CELL CONFIG"):
             # configs
             _THEMES = stace.THEMES
             _KEYBINDINGS = stace.KEYBINDINGS
             col21, col22 = st.columns(2)
             with col21:
-                theme = st.selectbox("Theme", options=[_THEMES[2]] + _THEMES, key=f"{language}1")
-                tab_size = st.slider("Tab size", min_value=1, max_value=8, value=4, key=f"{language}4")
+                theme = st.selectbox("Theme", options=[_THEMES[2]] + _THEMES, key=f"{language}1{key}")
+                tab_size = st.slider("Tab size", min_value=1, max_value=8, value=4, key=f"{language}4{key}")
             with col22:
-                keybinding = st.selectbox("Keybinding", options=[_KEYBINDINGS[-2]] + _KEYBINDINGS, key=f"{language}2")
-                font_size = st.slider("Font size", min_value=5, max_value=24, value=14, key=f"{language}3")
+                keybinding = st.selectbox("Keybinding", options=[_KEYBINDINGS[-2]] + _KEYBINDINGS, key=f"{language}2{key}")
+                font_size = st.slider("Font size", min_value=5, max_value=24, value=14, key=f"{language}3{key}")
             # kwargs = {theme: theme, keybinding: keybinding} # TODO: DRY
+    if not show_panel:
+        placeholder.empty()
     with col1:
         content = stace.st_ace(
             language=language,
@@ -104,6 +108,7 @@ def code_editor(language, hint):
             theme=theme,
             font_size=font_size,
             tab_size=tab_size,
+            key=key
         )
 
     # Display editor's content as you type
@@ -120,9 +125,9 @@ def query_data(sql, df):
         # st.stop()
 
 
-def download(df, save_as="results.csv"):
+def download(df, key, save_as="results.csv"):
     # -- to download
-    @st.cache_data
+    # @st.cache_data
     def convert_df(_df):
         return _df.to_csv().encode("utf-8")
 
@@ -132,21 +137,22 @@ def download(df, save_as="results.csv"):
         csv,
         save_as,
         "text/csv",
+        key=key
     )
 
 
-def display_results(query, result: pd.DataFrame):
+def display_results(query: str, result: pd.DataFrame, key: str):
     # st.write("> QUERY")
     # st.code(query, language="sql")
     st.write("> RESULTS")
     st.dataframe(result, use_container_width=True)
     st.markdown(f"> `{result.shape}`")
-    download(result)
+    download(result, key=key)
 
 
 def run_python_script(user_script):
     py = f"st.write({user_script})"
-    # if py:
+    st.code(user_script)
     try:
         st.write(f"> _RESULTS_")
         exec(py)
@@ -163,7 +169,7 @@ def data_profiler(df):
 def docs():
     content = """
     
-    #### Query tabular files (csv, xlsx .. etc) using SQL and/or Python (pandas)
+    #### Upload a dataset to process (manipulate/analyze) it using SQL and Python
     To get started, drag and drop the file, read from a URL, or select a sample dataset. To load a new dataset, refresh the webpage.
     > <sub>[_src code_ here](https://github.com/iamaziz/sqlify)</sub>
     """
@@ -177,24 +183,35 @@ if __name__ == "__main__":
     df = read_data()
     display(df)
     st.write("---")
+    st.header("SQL")
     hint = "Type SQL to query the table above. By default, the table name is 'df'. For example, to select 10 rows: \nSELECT * FROM df LIMIT 10"
-    sql = code_editor("sql", hint)
-    if sql:
-        res = query_data(sql, df)
-        display_results(sql, res)
+    col1, col2 = st.columns([2, 1])
+    number_cells = col1.slider("Number of SQL sessions to use", value=1, max_value=40)
+    show_panel = col2.checkbox("Show editor panel", key="sql")
+    for i in range(number_cells):
+        key = f"sql{i}"
+        sql = code_editor("sql", hint, show_panel=show_panel, key=key)
+        if sql:
+            st.code(sql)
+            res = query_data(sql, df)
+            display_results(sql, res, f"{key}{sql}")
 
     # run and dexectue python script
     st.write("---")
+    st.header("Python")
     hint = """Type Python command (one-liner) to execute or manipulate the dataframe e.g. `df.sample(7)`. Results rendered using `st.write()`.
     📊 Visulaization example: from "movies" dataset, plot average rating by genre:
         st.line_chart(df.groupby("Genre")[["RottenTomatoes", "AudienceScore"]].mean())
     🗺 Maps example: show the top 10 populated cities in the world on map (from "Cities Population" dataset)
         st.map(df.sort_values(by='population', ascending=False)[:10])
     """
-
-    user_script = code_editor("python", hint)
-    if user_script:
-        run_python_script(user_script)
+    col1, col2 = st.columns([2, 1])
+    number_cells = col1.slider("Number of Python cells to use", value=3, max_value=40)
+    show_panel = col2.checkbox("Show cell config panel")
+    for i in range(number_cells):
+        user_script = code_editor("python", hint, show_panel=show_panel, key=i)
+        if user_script:
+            run_python_script(user_script)
 
     st.write("---")
     if st.checkbox("DATA PROFILE"):
