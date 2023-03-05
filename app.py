@@ -7,6 +7,7 @@ import scipy # for user session
 import plotly.express as px # for user session
 import plotly.figure_factory as ff # for user session
 import matplotlib.pyplot as plt # for user session
+import sklearn
 from ydata_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
 
@@ -181,26 +182,51 @@ def data_profiler(df):
 def docs():
     content = """
     
-    #### Upload a dataset to process (manipulate/analyze) it using SQL and Python, similar to running Jupyter Notebooks.
-    To get started, drag and drop the file, read from a URL, or select a sample dataset. To load a new dataset, refresh the webpage.
+    # What
+
+    Upload a dataset to process (manipulate/analyze) it using SQL and Python, similar to running Jupyter Notebooks.
+    To get started, drag and drop the dataset file, read from a URL, or select a sample dataset. To load a new dataset, refresh the webpage.
     > <sub>[_src code_ here](https://github.com/iamaziz/sqlify)</sub>
 
     More public datasets available [here](https://github.com/fivethirtyeight/data).
 
-    SCREENSHOTS
+    # Usage
 
-    # _EXAMPLE 1_
+    Example usage
+
+    > After loading the sample Iris dataset from sklearn (or select it from the dropdown list), the lines below can be executed inside a Python cell:
+
+    ```python
+
+    from sklearn.datasets import load_iris;
+    from sklearn import tree;
+    iris = load_iris();
+    X, y = iris.data, iris.target;
+    clf = tree.DecisionTreeClassifier(max_depth=4);
+    clf = clf.fit(X, y);
+    plt.figure(figsize=(7,3));
+    fig, ax = plt.subplots()
+    tree.plot_tree(clf, filled=True, fontsize=4);
+    st.pyplot(fig)
+    ```
+    
+    Which outputs the tree below:
+    
+    > <img width="1000" alt="image" src="https://user-images.githubusercontent.com/3298308/222992623-1dba9bad-4858-43b6-84bf-9d7cf78d61f7.png">
+
+    # SCREENSHOTS
+
+    ## _EXAMPLE 1_
     ![image](https://user-images.githubusercontent.com/3298308/222946054-a92ea42c-ffe6-4958-900b-2b72056216f8.png)
 
-    # _EXAMPLE 2_
+    ## _EXAMPLE 2_
     ![image](https://user-images.githubusercontent.com/3298308/222947315-f2c06063-dd18-4215-bbab-c1b2f3f00888.png)
     ![image](https://user-images.githubusercontent.com/3298308/222947321-c7e38d9d-7274-4368-91c1-1548b0da14dc.png)
 
-    # _EXAMPLE 3_
-    ![image](https://user-images.githubusercontent.com/3298308/222948323-784b8ab4-35dc-412f-964d-6991a8c46047.png)
+    ## _EXAMPLE 3_
     ![image](https://user-images.githubusercontent.com/3298308/222949287-2024a75f-04db-4861-93b5-c43d206e2dc6.png)
 
-    # _EXAMPLE 4_
+    ## _EXAMPLE 4_
     ![image](https://user-images.githubusercontent.com/3298308/222984104-0bfd806f-ecd9-455e-b368-181f9aa0225b.png)
 
     """

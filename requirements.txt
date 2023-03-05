@@ -10,3 +10,4 @@ pandas-profiling
 ydata-profiling
 streamlit-pandas-profiling
 plotly
+scikit-learn
