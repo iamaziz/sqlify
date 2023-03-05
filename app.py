@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import streamlit_ace as stace
 import duckdb
+import matplotlib.pyplot as plt
 from ydata_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
 
@@ -149,9 +150,14 @@ def display_results(query: str, result: pd.DataFrame, key: str):
 
 
 def run_python_script(user_script, key):
-    py = f"st.write({user_script})" if not user_script.startswith("st.") else user_script
+    if user_script.startswith("st.") or ";" in user_script:
+        py = user_script
+    else:
+        py = f"st.write({user_script})"
     try:
-        exec(py)
+        cmds = py.split(";")
+        for cmd in cmds:
+            exec(cmd)
     except Exception as e:
         c1, c2 = st.columns(2)
         c1.warning("Wrong Python command.")
@@ -192,7 +198,8 @@ if __name__ == "__main__":
     number_cells = col1.number_input("Number of SQL cells to use", value=1, max_value=40)
     show_panel = col2.checkbox("Show editor panel", key="sql")
     for i in range(number_cells):
-        st.write(f"`IN[{i+1}]`")
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.write(f"> `IN[{i+1}]`")
         key = f"sql{i}"
         sql = code_editor("sql", hint, show_panel=show_panel, key=key)
         if sql:
@@ -210,11 +217,22 @@ if __name__ == "__main__":
     🗺 Maps example: show the top 10 populated cities in the world on map (from "Cities Population" dataset)
         st.map(df.sort_values(by='population', ascending=False)[:10])
     """
+    help = """
+    For multiple lines, use semicolons e.g.
+
+    ```python
+
+    fig, ax = plt.subplots();
+    ax.hist(df[[col1, col2]]);
+    st.pyplot(fig);
+    ```
+    """
     col1, col2 = st.columns([2, 1])
-    number_cells = col1.number_input("Number of Python cells to use", value=3, max_value=40)
+    number_cells = col1.number_input("Number of Python cells to use", value=3, max_value=40, help=help)
     show_panel = col2.checkbox("Show cell config panel")
     for i in range(number_cells):
-        st.write(f"`IN[{i+1}]`")
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.write(f"> `IN[{i+1}]`")
         user_script = code_editor("python", hint, show_panel=show_panel, key=i)
         if user_script:
             df.rename(columns={"lng": "lon"}, inplace=True) # hot-fix for "World Population" dataset
