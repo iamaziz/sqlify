@@ -150,15 +150,17 @@ def display_results(query: str, result: pd.DataFrame, key: str):
     download(result, key=key)
 
 
-def run_python_script(user_script):
+def run_python_script(user_script, key):
     py = f"st.write({user_script})"
     st.code(user_script)
     try:
         st.write(f"> _RESULTS_")
         exec(py)
     except Exception as e:
-        st.warning("Wrong Python command.")
-        # st.exception(e)
+        c1, c2 = st.columns(2)
+        c1.warning("Wrong Python command.")
+        if c2.button("Show error", key=key):
+            st.exception(e)
 
 
 @st.cache_resource
@@ -212,6 +214,7 @@ if __name__ == "__main__":
         user_script = code_editor("python", hint, show_panel=show_panel, key=i)
         if user_script:
             run_python_script(user_script)
+            run_python_script(user_script, key=f"{user_script}{i}")
 
     st.write("---")
     if st.checkbox("DATA PROFILE"):
