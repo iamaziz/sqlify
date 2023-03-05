@@ -148,7 +148,7 @@ def display_results(query: str, result: pd.DataFrame, key: str):
 
 
 def run_python_script(user_script, key):
-    py = f"st.write({user_script})"
+    py = f"st.write({user_script})" if not user_script.startswith("st.") else user_script
     try:
         exec(py)
     except Exception as e:
@@ -203,7 +203,7 @@ if __name__ == "__main__":
     # run and dexectue python script
     st.write("---")
     st.header("Python")
-    hint = """Type Python command (one-liner) to execute or manipulate the dataframe e.g. `df.sample(7)`. Results rendered using `st.write()`.
+    hint = """Type Python command (one-liner) to execute or manipulate the dataframe e.g. `df.sample(7)`. By default, results are rendered using `st.write()`.
     📊 Visulaization example: from "movies" dataset, plot average rating by genre:
         st.line_chart(df.groupby("Genre")[["RottenTomatoes", "AudienceScore"]].mean())
     🗺 Maps example: show the top 10 populated cities in the world on map (from "Cities Population" dataset)
