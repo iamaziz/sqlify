@@ -181,7 +181,12 @@ if __name__ == "__main__":
     display(df)
     st.write("---")
     st.header("SQL")
-    hint = "Type SQL to query the table above. By default, the table name is 'df'. For example, to select 10 rows: \nSELECT * FROM df LIMIT 10"
+    hint = """Type SQL to query the loaded dataset, data is stored in a table named 'df'.
+    For example, to select 10 rows:
+        SELECT * FROM df LIMIT 10
+    Describe the table:
+        DESCRIBE TABLE df
+    """
     col1, col2 = st.columns([2, 1])
     number_cells = col1.slider("Number of SQL sessions to use", value=1, max_value=40)
     show_panel = col2.checkbox("Show editor panel", key="sql")
