@@ -228,6 +228,14 @@ if __name__ == "__main__":
     ax.hist(df[[col1, col2]]);
     st.pyplot(fig);
     ```
+    or
+
+    ```python
+    groups = [group for _, group in df.groupby('class')];
+    for i in range(3):
+        st.write(groups[i]['name'].iloc[0])
+        st.bar_chart(groups[i].mean())
+    ```
     """
     col1, col2 = st.columns([2, 1])
     number_cells = col1.number_input("Number of Python cells to use", value=3, max_value=40, help=help)
