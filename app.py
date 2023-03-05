@@ -215,7 +215,7 @@ if __name__ == "__main__":
         st.write(f"`IN[{i+1}]`")
         user_script = code_editor("python", hint, show_panel=show_panel, key=i)
         if user_script:
-            run_python_script(user_script)
+            df.rename(columns={"lng": "lon"}, inplace=True) # hot-fix for "World Population" dataset
             run_python_script(user_script, key=f"{user_script}{i}")
 
     st.write("---")
