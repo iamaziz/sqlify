@@ -2,7 +2,9 @@ import pandas as pd
 import streamlit as st
 import streamlit_ace as stace
 import duckdb
-import matplotlib.pyplot as plt
+import numpy as np # for user session
+import scipy # for user session
+import matplotlib.pyplot as plt # for user session
 from ydata_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
 
