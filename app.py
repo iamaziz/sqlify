@@ -195,7 +195,8 @@ if __name__ == "__main__":
         key = f"sql{i}"
         sql = code_editor("sql", hint, show_panel=show_panel, key=key)
         if sql:
-            st.code(sql)
+            st.code(sql, language="sql")
+            st.write(f"`OUT[{i+1}]`")
             res = query_data(sql, df)
             display_results(sql, res, f"{key}{sql}")
 
@@ -216,6 +217,8 @@ if __name__ == "__main__":
         user_script = code_editor("python", hint, show_panel=show_panel, key=i)
         if user_script:
             df.rename(columns={"lng": "lon"}, inplace=True) # hot-fix for "World Population" dataset
+            st.code(user_script, language="python")
+            st.write(f"`OUT[{i+1}]`")
             run_python_script(user_script, key=f"{user_script}{i}")
 
     st.write("---")
