@@ -30,12 +30,12 @@ SAMPLE_DATA = {
 
 
 def read_data():
-    txt = "Upload a data file (supported files: .csv) TODO: .tsv, .xls, .xlsx"
+    txt = "Upload a data file (supported files: .csv)"
     placeholder = st.empty()
     with placeholder:
         col1, col2, col3 = st.columns([3, 2, 1])
         with col1:
-            file_ = st.file_uploader(txt)
+            file_ = st.file_uploader(txt, help="TODO: .tsv, .xls, .xlsx")
         with col2:
             url = st.text_input(
                 "Read from a URL",
