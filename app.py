@@ -4,6 +4,7 @@ import streamlit_ace as stace
 import duckdb
 import numpy as np # for user session
 import scipy # for user session
+import plotly.express as px # for user session
 import plotly.figure_factory as ff # for user session
 import matplotlib.pyplot as plt # for user session
 from ydata_profiling import ProfileReport
@@ -28,6 +29,7 @@ SAMPLE_DATA = {
     "Movies": "https://raw.githubusercontent.com/reisanar/datasets/master/HollywoodMovies.csv",
     "Iris Flower": "https://gist.githubusercontent.com/netj/8836201/raw/6f9306ad21398ea43cba4f7d537619d0e07d5ae3/iris.csv",
     "World Population": "https://gist.githubusercontent.com/curran/13d30e855d48cdd6f22acdf0afe27286/raw/0635f14817ec634833bb904a47594cc2f5f9dbf8/worldcities_clean.csv",
+    "Country Table": "https://raw.githubusercontent.com/datasciencedojo/datasets/master/WorldDBTables/CountryTable.csv",
     "World Cities": "https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/csv/cities.csv",
     "World States": "https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/csv/states.csv",
     "World Countries": "https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/csv/countries.csv"
@@ -180,7 +182,10 @@ def docs():
     To get started, drag and drop the file, read from a URL, or select a sample dataset. To load a new dataset, refresh the webpage.
     > <sub>[_src code_ here](https://github.com/iamaziz/sqlify)</sub>
 
-    Examples:
+    More public datasets available [here](https://github.com/fivethirtyeight/data).
+
+    SCREENSHOTS
+
     # _EXAMPLE 1_
     ![image](https://user-images.githubusercontent.com/3298308/222946054-a92ea42c-ffe6-4958-900b-2b72056216f8.png)
 
@@ -191,6 +196,10 @@ def docs():
     # _EXAMPLE 3_
     ![image](https://user-images.githubusercontent.com/3298308/222948323-784b8ab4-35dc-412f-964d-6991a8c46047.png)
     ![image](https://user-images.githubusercontent.com/3298308/222949287-2024a75f-04db-4861-93b5-c43d206e2dc6.png)
+
+    # _EXAMPLE 4_
+    ![image](https://user-images.githubusercontent.com/3298308/222984104-0bfd806f-ecd9-455e-b368-181f9aa0225b.png)
+
     """
 
     with st.expander("READE"):
