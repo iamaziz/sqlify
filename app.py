@@ -157,6 +157,9 @@ def display_results(query: str, result: pd.DataFrame, key: str):
 def run_python_script(user_script, key):
     if user_script.startswith("st.") or ";" in user_script:
         py = user_script
+    elif user_script.endswith("?"): # -- same as ? in Jupyter Notebook
+        in_ = user_script.replace("?", "")
+        py = f"st.help({in_})"
     else:
         py = f"st.write({user_script})"
     try:
