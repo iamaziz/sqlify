@@ -164,8 +164,8 @@ def docs():
     content = """
     
     #### Query tabular files (csv, xlsx .. etc) using SQL and/or Python (pandas)
-    To get started, drag and drop the file or read from a URL. 
-    > <sub>[src code here](https://github.com/iamaziz/sqlify)</sub>
+    To get started, drag and drop the file, read from a URL, or select a sample dataset. To load a new dataset, refresh the webpage.
+    > <sub>[_src code_ here](https://github.com/iamaziz/sqlify)</sub>
     """
 
     with st.expander("READE"):
