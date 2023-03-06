@@ -1,0 +1,50 @@
+"""
+World Population Dataset
+
+Monitoring city population (per country) with upper/lower bounds intervals
+"""
+
+# -- filter on arbitrarily selected countries
+# countries = ["Japan", "Saudi Arabia", "Jordan" ,"United States"];
+countries = df.sample(5)['country'].values
+
+# -- add a new column to df (mean or std)
+df = df.groupby("country", as_index=False).apply(
+    lambda d: d.assign(city_population_avg=d["population"].std().astype(int))
+);
+# -- measure members distance from LCL
+df = df.groupby("country", as_index=False).apply(
+    lambda d: d.assign(upper_bound=abs((d["city_population_avg"]*1.1).astype(int)+d["city_population_avg"]))
+);
+df = df.groupby("country", as_index=False).apply(
+    lambda d: d.assign(lower_bound=abs((d["city_population_avg"]*1.1).astype(int)-d["city_population_avg"]))
+);
+
+
+for country in countries:
+
+    _df = df[df['country']==country]
+    b = px.bar(_df, x="city", y="population", facet_col="country", facet_col_wrap=4)
+
+    s = px.line(
+        _df, x="city", y="city_population_avg", facet_col="country", facet_col_wrap=4, 
+        color="city_population_avg"
+    ).update_traces(line_color="orange")
+    b.add_traces(s.data)
+
+    u = px.line(
+        _df, x="city", y="upper_bound", facet_col="country", facet_col_wrap=4,
+        color="upper_bound"
+    ).update_traces(line_color="green")
+    b.add_traces(u.data)
+
+    l = px.line(
+        _df, x="city", y="lower_bound", facet_col="country", facet_col_wrap=4,
+        color="lower_bound"
+    ).update_traces(line_color="red")
+    b.add_traces(l.data)
+
+    st.markdown(f"# {country}")
+    col1, col2 = st.columns(2)
+    col1.plotly_chart(b)
+    col2.write(_df)

@@ -235,9 +235,26 @@ def docs():
     with st.expander("READE"):
         st.markdown(content, unsafe_allow_html=True)
 
+        return st.checkbox("Show more code examples")
+
+
+def display_example_snippets():
+    from glob import glob
+
+    examples = glob("./examples/*")
+    with st.expander("EXAMPLES"):
+        example = st.selectbox("", options=[""] + examples)
+        if example:
+            with open(example, "r") as f:
+                content = f.read()
+            st.code(content)
+
 
 if __name__ == "__main__":
-    docs()
+    show_examples = docs()
+    if show_examples:
+        display_example_snippets()
+
     df = read_data()
     display(df)
     st.write("---")
