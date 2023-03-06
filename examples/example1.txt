@@ -48,3 +48,7 @@ for country in countries:
     col1, col2 = st.columns(2)
     col1.plotly_chart(b)
     col2.write(_df)
+
+    below_control = _df[_df['population']<_df['lower_bound']].shape[0]
+    msg = f"{round((below_control/_df.shape[0]), 2)*100}% of the cities are below the `lower_bound` of population control"
+    st.markdown(f"> ### {msg}")
