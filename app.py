@@ -98,17 +98,18 @@ def code_editor(language, hint, show_panel, key=None):
             col21, col22 = st.columns(2)
             with col21:
                 theme = st.selectbox("Theme", options=[_THEMES[2]] + _THEMES, key=f"{language}1{key}")
-                tab_size = st.slider("Tab size", min_value=1, max_value=8, value=4, key=f"{language}4{key}")
+                tab_size = st.slider("Tab size", min_value=1, max_value=8, value=4, key=f"{language}2{key}")
             with col22:
-                keybinding = st.selectbox("Keybinding", options=[_KEYBINDINGS[-2]] + _KEYBINDINGS, key=f"{language}2{key}")
-                font_size = st.slider("Font size", min_value=5, max_value=24, value=14, key=f"{language}3{key}")
+                keybinding = st.selectbox("Keybinding", options=[_KEYBINDINGS[-2]] + _KEYBINDINGS, key=f"{language}3{key}")
+                font_size = st.slider("Font size", min_value=5, max_value=24, value=14, key=f"{language}4{key}")
+            height = st.slider("Editor heigh", value=170, max_value=700,key=f"{language}5{key}")
             # kwargs = {theme: theme, keybinding: keybinding} # TODO: DRY
     if not show_panel:
         placeholder.empty()
     with col1:
         content = stace.st_ace(
             language=language,
-            height=170,
+            height=height,
             show_gutter=False,
             # annotations="",
             placeholder=hint,
