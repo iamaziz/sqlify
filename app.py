@@ -85,40 +85,38 @@ def display(df):
 
 def code_editor(language, hint, show_panel, key=None):
     # Spawn a new Ace editor
-    col1, col2 = st.columns([2, 1])
-    placeholder = col2.empty()
+    placeholder = st.empty()
 
-    # with placeholder:
-    st.write("")
-    with col2:
-        with placeholder.expander("CELL CONFIG"):
-            # configs
-            _THEMES = stace.THEMES
-            _KEYBINDINGS = stace.KEYBINDINGS
-            col21, col22 = st.columns(2)
-            with col21:
-                theme = st.selectbox("Theme", options=[_THEMES[2]] + _THEMES, key=f"{language}1{key}")
-                tab_size = st.slider("Tab size", min_value=1, max_value=8, value=4, key=f"{language}2{key}")
-            with col22:
-                keybinding = st.selectbox("Keybinding", options=[_KEYBINDINGS[-2]] + _KEYBINDINGS, key=f"{language}3{key}")
-                font_size = st.slider("Font size", min_value=5, max_value=24, value=14, key=f"{language}4{key}")
-            height = st.slider("Editor heigh", value=170, max_value=700,key=f"{language}5{key}")
-            # kwargs = {theme: theme, keybinding: keybinding} # TODO: DRY
+    default_theme = "solarized_dark" if language == "sql" else "chrome"
+
+    with placeholder.expander("CELL CONFIG"):
+        # configs
+        _THEMES = stace.THEMES
+        _KEYBINDINGS = stace.KEYBINDINGS
+        col21, col22 = st.columns(2)
+        with col21:
+            theme = st.selectbox("Theme", options=[default_theme] + _THEMES, key=f"{language}1{key}")
+            tab_size = st.slider("Tab size", min_value=1, max_value=8, value=4, key=f"{language}2{key}")
+        with col22:
+            keybinding = st.selectbox("Keybinding", options=[_KEYBINDINGS[-2]] + _KEYBINDINGS, key=f"{language}3{key}")
+            font_size = st.slider("Font size", min_value=5, max_value=24, value=14, key=f"{language}4{key}")
+        height = st.slider("Editor height", value=230, max_value=777,key=f"{language}5{key}")
+        # kwargs = {theme: theme, keybinding: keybinding} # TODO: DRY
     if not show_panel:
         placeholder.empty()
-    with col1:
-        content = stace.st_ace(
-            language=language,
-            height=height,
-            show_gutter=False,
-            # annotations="",
-            placeholder=hint,
-            keybinding=keybinding,
-            theme=theme,
-            font_size=font_size,
-            tab_size=tab_size,
-            key=key
-        )
+
+    content = stace.st_ace(
+        language=language,
+        height=height,
+        show_gutter=False,
+        # annotations="",
+        placeholder=hint,
+        keybinding=keybinding,
+        theme=theme,
+        font_size=font_size,
+        tab_size=tab_size,
+        key=key
+    )
 
     # Display editor's content as you type
     # content
@@ -257,73 +255,88 @@ if __name__ == "__main__":
 
     df = read_data()
     display(df)
-    st.write("---")
-    st.header("SQL")
-    hint = """Type SQL to query the loaded dataset, data is stored in a table named 'df'.
-    For example, to select 10 rows:
-        SELECT * FROM df LIMIT 10
-    Describe the table:
-        DESCRIBE TABLE df
-    """
-    col1, col2 = st.columns([2, 1])
-    number_cells = col1.number_input("Number of SQL cells to use", value=1, max_value=40)
-    show_panel = col2.checkbox("Show cell config panel", key="sql")
-    for i in range(number_cells):
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.write(f"> `IN[{i+1}]`")
-        key = f"sql{i}"
-        sql = code_editor("sql", hint, show_panel=show_panel, key=key)
-        if sql:
-            st.code(sql, language="sql")
-            st.write(f"`OUT[{i+1}]`")
-            res = query_data(sql, df)
-            display_results(sql, res, f"{key}{sql}")
+
+    # run and execute SQL script
+    def sql_cells(df):
+        st.write("---")
+        st.header("SQL")
+        hint = """Type SQL to query the loaded dataset, data is stored in a table named 'df'.
+        For example, to select 10 rows:
+            SELECT * FROM df LIMIT 10
+        Describe the table:
+            DESCRIBE TABLE df
+        """
+        number_cells = st.sidebar.number_input("Number of SQL cells to use", value=1, max_value=40)
+        for i in range(number_cells):
+            col1, col2 = st.columns([2, 1])
+            st.markdown("<br>", unsafe_allow_html=True)
+            col1.write(f"> `IN[{i+1}]`")
+            show_panel = col2.checkbox("Show cell config panel", key="sql")
+            key = f"sql{i}"
+            sql = code_editor("sql", hint, show_panel=show_panel, key=key)
+            if sql:
+                st.code(sql, language="sql")
+                st.write(f"`OUT[{i+1}]`")
+                res = query_data(sql, df)
+                display_results(sql, res, f"{key}{sql}")
 
     # run and dexectue python script
-    st.write("---")
-    st.header("Python")
-    hint = """Type Python command (one-liner) to execute or manipulate the dataframe e.g. `df.sample(7)`. By default, results are rendered using `st.write()`.
-    📊 Visulaization example: from "movies" dataset, plot average rating by genre:
-        st.line_chart(df.groupby("Genre")[["RottenTomatoes", "AudienceScore"]].mean())
-    🗺 Maps example: show the top 10 populated cities in the world on map (from "Cities Population" dataset)
-        st.map(df.sort_values(by='population', ascending=False)[:10])
-    """
-    help = """
-    For multiple lines, use semicolons e.g.
+    def python_cells():
+        st.write("---")
+        st.header("Python")
+        hint = """Type Python command (one-liner) to execute or manipulate the dataframe e.g. `df.sample(7)`. By default, results are rendered using `st.write()`.
+        📊 Visulaization example: from "movies" dataset, plot average rating by genre:
+            st.line_chart(df.groupby("Genre")[["RottenTomatoes", "AudienceScore"]].mean())
+        🗺 Maps example: show the top 10 populated cities in the world on map (from "Cities Population" dataset)
+            st.map(df.sort_values(by='population', ascending=False)[:10])
 
-    ```python
+        NOTE: for multi-lines, a semi-colon can be used to end each line e.g.
+                print("first line");
+                print("second line);
+        """
+        help = """
+        For multiple lines, use semicolons e.g.
 
-    fig, ax = plt.subplots();
-    ax.hist(df[[col1, col2]]);
-    st.pyplot(fig);
-    ```
-    or
+        ```python
 
-    ```python
-    groups = [group for _, group in df.groupby('class')];
-    for i in range(3):
-        st.write(groups[i]['name'].iloc[0])
-        st.bar_chart(groups[i].mean())
-    ```
-    """
-    col1, col2 = st.columns([2, 1])
-    number_cells = col1.number_input("Number of Python cells to use", value=3, max_value=40, help=help)
-    show_panel = col2.checkbox("Show cell config panel")
-    for i in range(number_cells):
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.write(f"> `IN[{i+1}]`")
-        user_script = code_editor("python", hint, show_panel=show_panel, key=i)
-        if user_script:
-            df.rename(columns={"lng": "lon"}, inplace=True) # hot-fix for "World Population" dataset
-            st.code(user_script, language="python")
-            st.write(f"`OUT[{i+1}]`")
-            run_python_script(user_script, key=f"{user_script}{i}")
+        fig, ax = plt.subplots();
+        ax.hist(df[[col1, col2]]);
+        st.pyplot(fig);
+        ```
+        or
 
-    st.write("---")
-    st.header("Data Profiling")
-    if st.checkbox("GENERATE REPORT", help="pandas profiling, generated by [ydata-profiling](https://github.com/ydataai/ydata-profiling)"):
+        ```python
+        groups = [group for _, group in df.groupby('class')];
+        for i in range(3):
+            st.write(groups[i]['name'].iloc[0])
+            st.bar_chart(groups[i].mean())
+        ```
+        """
+        number_cells = st.sidebar.number_input("Number of Python cells to use", value=1, max_value=40, min_value=1, help=help)
+        for i in range(number_cells):
+            st.markdown("<br><br><br>", unsafe_allow_html=True)
+            col1, col2 = st.columns([2, 1])
+            col1.write(f"> `IN[{i+1}]`")
+            show_panel = col2.checkbox("Show cell config panel", key=f"panel{i}")
+            user_script = code_editor("python", hint, show_panel=show_panel, key=i)
+            if user_script:
+                df.rename(columns={"lng": "lon"}, inplace=True) # hot-fix for "World Population" dataset
+                st.code(user_script, language="python")
+                st.write(f"`OUT[{i+1}]`")
+                run_python_script(user_script, key=f"{user_script}{i}")
+
+
+    if st.sidebar.checkbox("Show SQL cells", value=True):
+        sql_cells(df)
+    if st.sidebar.checkbox("Show Python cells", value=True):
+        python_cells()
+
+    st.sidebar.write("---")
+
+    if st.sidebar.checkbox("Generate Data Profile Report", help="pandas profiling, generated by [ydata-profiling](https://github.com/ydataai/ydata-profiling)"):
+        st.write("---")
+        st.header("Data Profiling")
         profile = data_profiler(df)
-
         st_profile_report(profile)
 
     st.write("---")
