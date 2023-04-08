@@ -15,6 +15,8 @@ st.set_page_config(page_title="PySQLify", page_icon="🔎", layout="wide")
 st.title("PySQLify")
 st.write("_Data Analysis_ Tool")
 
+p = st.write
+print = st.write
 
 @st.cache_data
 def _read_csv(f, **kwargs):
