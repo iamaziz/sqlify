@@ -11,3 +11,7 @@ ydata-profiling
 streamlit-pandas-profiling
 plotly
 scikit-learn
+plotly_express
+openai
+anthropic
+altair==4.2.0
